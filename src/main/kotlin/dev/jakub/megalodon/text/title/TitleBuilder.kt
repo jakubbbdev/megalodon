@@ -15,7 +15,7 @@ inline fun adventureTitle(
     title: String,
     subtitle: String = "",
     builder: TitleBuilder.() -> Unit
-) = TitleBuilder(title, subtitle).apply(builder).builder()
+) = TitleBuilder(title, subtitle).apply(builder).build()
 
 @InternalUse
 class TitleBuilder(
