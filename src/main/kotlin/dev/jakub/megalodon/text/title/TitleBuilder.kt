@@ -20,37 +20,37 @@ inline fun adventureTitle(
 @InternalUse
 class TitleBuilder(
     private val title: String,
-    private val subtitle: String
+    private val subTitle: String
 ) {
     private val currentStyles = mutableMapOf<TitleType, MutableSet<TextDecoration>>()
 
-    fun italic(titleType: TitleType, enabled: Boolean = true) = apply {
+    fun italic(titleType: TitleType, enabled: Boolean = true) {
         if (enabled) addStyle(titleType, TextDecoration.ITALIC)
     }
 
-    fun bold(titleType: TitleType, enabled: Boolean = true) = apply {
+    fun bold(titleType: TitleType, enabled: Boolean = true) {
         if (enabled) addStyle(titleType, TextDecoration.BOLD)
     }
 
-    fun strikethrough(titleType: TitleType, enabled: Boolean = true) = apply {
+    fun strikethrough(titleType: TitleType, enabled: Boolean = true) {
         if (enabled) addStyle(titleType, TextDecoration.STRIKETHROUGH)
     }
 
-    fun underlined(titleType: TitleType, enabled: Boolean = true) = apply {
+    fun underlined(titleType: TitleType, enabled: Boolean = true) {
         if (enabled) addStyle(titleType, TextDecoration.UNDERLINED)
     }
 
-    fun obfuscated(titleType: TitleType, enabled: Boolean = true) = apply {
+    fun obfuscated(titleType: TitleType, enabled: Boolean = true) {
         if (enabled) addStyle(titleType, TextDecoration.OBFUSCATED)
     }
 
-    private fun addStyle(titleType: TitleType, decoration: TextDecoration) {
+    private fun addStyle(titleType: TitleType, textDecoration: TextDecoration) {
         when (titleType) {
-            TitleType.UP -> currentStyles.computeIfAbsent(TitleType.UP) { mutableSetOf() }.add(decoration)
-            TitleType.DOWN -> currentStyles.computeIfAbsent(TitleType.DOWN) { mutableSetOf() }.add(decoration)
+            TitleType.UP -> currentStyles.computeIfAbsent(TitleType.UP) { mutableSetOf() }.add(textDecoration)
+            TitleType.DOWN -> currentStyles.computeIfAbsent(TitleType.DOWN) { mutableSetOf() }.add(textDecoration)
             TitleType.BOTH -> {
-                currentStyles.computeIfAbsent(TitleType.UP) { mutableSetOf() }.add(decoration)
-                currentStyles.computeIfAbsent(TitleType.DOWN) { mutableSetOf() }.add(decoration)
+                currentStyles.computeIfAbsent(TitleType.UP) { mutableSetOf() }.add(textDecoration)
+                currentStyles.computeIfAbsent(TitleType.DOWN) { mutableSetOf() }.add(textDecoration)
             }
         }
     }
@@ -61,14 +61,14 @@ class TitleBuilder(
     var duration: Long = 3
 
     fun build(): AdventureTitle {
-        var titleComponent = adventureText(title) {
+        val titleComponent = adventureText(title) {
             resolver = this@TitleBuilder.resolver
             type = this@TitleBuilder.type
             if (this@TitleBuilder.currentStyles[TitleType.UP].isNullOrEmpty()) return@adventureText
             currentStyles = this@TitleBuilder.currentStyles[TitleType.UP]!!
         }
 
-        var subtitleComponent = adventureText(subtitle) {
+        val subtitleComponent = adventureText(subTitle) {
             resolver = this@TitleBuilder.resolver
             type = CommunicationType.NONE
             if (this@TitleBuilder.currentStyles[TitleType.DOWN].isNullOrEmpty()) return@adventureText
@@ -79,4 +79,5 @@ class TitleBuilder(
         val title = Title.title(titleComponent, subtitleComponent, time)
         return AdventureTitle(title, type?.sound)
     }
+
 }

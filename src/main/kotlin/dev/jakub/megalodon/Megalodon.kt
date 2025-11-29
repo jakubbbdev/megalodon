@@ -1,5 +1,8 @@
 package dev.jakub.megalodon.dev.jakub.megalodon
 
+import dev.jakub.megalodon.dev.jakub.megalodon.command.megalodonCommandList
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEvent
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.plugin.java.JavaPlugin
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -30,6 +33,18 @@ abstract class Megalodon : JavaPlugin() {
     }
 
     private fun registerCommands() {
+        val manager = this.lifecycleManager
 
+        manager.registerEventHandler(LifecycleEvents.COMMANDS) { event ->
+            val commands = event.registrar()
+
+            megalodonCommandList.forEach { command ->
+                commands.register(
+                    command.command,
+                    command.description,
+                    command.aliases
+                )
+            }
+        }
     }
 }
