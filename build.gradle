@@ -36,6 +36,7 @@ repositories {
 dependencies {
     api "io.papermc.paper:paper-api:${paperVersion}-R0.1-SNAPSHOT"
     api "org.jetbrains.kotlin:kotlin-stdlib"
+    api "com.google.code.gson:gson:2.10.1"
 }
 
 kotlin {
