@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.21'
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'maven-publish'
 }
 
 java {
@@ -41,4 +42,47 @@ dependencies {
 
 kotlin {
     jvmToolchain(21)
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            def tagVersion = System.getenv('VERSION')
+
+            groupId = "dev.jakub.megalodon"
+            artifactId = "megalodon"
+            version = tagVersion ?: '0.0.1-SNAPSHOT'
+
+            artifact shadowJar
+
+            pom {
+                name = "megalodon"
+                url = "https://github.com/jakubbbdev/megalodon"
+
+
+                scm {
+                    connection = "scm:git:git://github.com/jakubbbdev/megalodon.git"
+                    developerConnection = "scm:git:git@github.com:jakubbbdev/jakubbbdev.git"
+                    url = "https://github.com/jakubbbdev/megalodon"
+                    tag = "HEAD"
+                }
+
+                ciManagement {
+                    system = "GitHub Actions"
+                    url = "https://github.com/jakubbbdev/megalodon/actions"
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = 'https://maven.pkg.github.com/jakubbbdev/megalodon'
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
